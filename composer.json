@@ -1,0 +1,19 @@
+{
+    "name": "michalbukovsky/aoc2021",
+    "require": {
+        "php": "~7.4.0",
+        "nette/utils": "^3.2",
+        "nette/robot-loader": "^3.3",
+        "tracy/tracy": "^2.7"
+    }
+    ,
+    "require-dev": {
+        "roave/security-advisories": "dev-latest"
+    },
+    "authors": [
+        {
+            "name": "Michal Bukovský",
+            "email": "michal.bukovsky@seznam.cz"
+        }
+    ]
+}
