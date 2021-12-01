@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace App;
 
@@ -10,6 +10,7 @@ abstract class TwoPartRunner implements IRunner
 {
     protected const TEST_DATA_FILE_1 = 'test1.txt';
     protected const TEST_DATA_FILE_2 = 'test2.txt';
+    protected const TEST_DATA_FILE_DEFAULT = 'test.txt';
     protected const DATA_FILE = 'data.txt';
 
 
@@ -50,11 +51,15 @@ abstract class TwoPartRunner implements IRunner
     {
         $folder = $this->getCurrentFolder();
 
-        if ($part === 1 && !file_exists("$folder/" . self::TEST_DATA_FILE_1)) {
+        if ($part === 1 && !file_exists("$folder/" . self::TEST_DATA_FILE_1)
+            && !file_exists("$folder/" . self::TEST_DATA_FILE_DEFAULT)
+        ) {
             Outputter::errorFatal('Test data file 1 is missing!');
         }
 
-        if ($part === 2 && !file_exists("$folder/" . self::TEST_DATA_FILE_2)) {
+        if ($part === 2 && !file_exists("$folder/" . self::TEST_DATA_FILE_2)
+            && !file_exists("$folder/" . self::TEST_DATA_FILE_DEFAULT)
+        ) {
             Outputter::errorFatal('Test data file 2 is missing!');
         }
 
@@ -76,6 +81,7 @@ abstract class TwoPartRunner implements IRunner
 
         if ($expected === null) {
             Outputter::notice("Expected value for part $part not set. Skipping test.");
+
             return;
         }
 
@@ -101,6 +107,10 @@ abstract class TwoPartRunner implements IRunner
     protected function getInput(string $fileName): Input
     {
         $folder = $this->getCurrentFolder();
+
+        if (!file_exists("$folder/$fileName")) {
+            $fileName = self::TEST_DATA_FILE_DEFAULT;
+        }
 
         return new Input(file_get_contents("$folder/$fileName"));
     }

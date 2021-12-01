@@ -33,7 +33,7 @@ class Input
     /**
      * @return int[]
      */
-    public function getAsIntegersArray(bool $filterLines = true): array
+    public function getAsArrayOfIntegers(bool $filterLines = true): array
     {
         return array_map(
             static fn(string $line): int => (int) $line,
