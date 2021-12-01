@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace App\Utils;
 
@@ -10,6 +10,12 @@ class Input
     public function __construct(string $data)
     {
         $this->data = $data;
+    }
+
+
+    public function getAsString(): string
+    {
+        return $this->data;
     }
 
 
@@ -27,10 +33,10 @@ class Input
     /**
      * @return int[]
      */
-    public function getAsInegersArray(bool $filterLines = true): array
+    public function getAsIntegersArray(bool $filterLines = true): array
     {
         return array_map(
-            static fn(string $line): int => (int)$line,
+            static fn(string $line): int => (int) $line,
             $this->getAsArray($filterLines)
         );
     }
@@ -44,9 +50,25 @@ class Input
         string $lineSeparator = "\n",
         string $spaceSeparator = ' '
     ): array {
+        if ($spaceSeparator === '') {
+            throw new \InvalidArgumentException('Space separator cannot be empty string!');
+        }
+
         return array_map(
             static fn(string $line): array => explode($spaceSeparator, $line),
             $this->getAsArray($filterLines, $lineSeparator)
+        );
+    }
+
+
+    /**
+     * @return string[][]
+     */
+    public function getAsArrayOfChars(bool $filterLines = true): array
+    {
+        return array_map(
+            static fn(string $line): array => str_split($line, 1),
+            $this->getAsArray($filterLines)
         );
     }
 }

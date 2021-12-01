@@ -18,7 +18,7 @@ $loader->setTempDirectory(__DIR__ . '/temp');
 $loader->register();
 
 $day = ($argv[1] ?? null);
-$part = (int)($argv[2] ?? 1);
+$part = (int) ($argv[2] ?? 1);
 
 if ($day === null) {
     Output::errorFatal('No day specified');
@@ -43,7 +43,12 @@ foreach ($filesInFolder as $filename) {
         Output::notice('Result:');
         Output::newline();
 
-        $day->run($part);
+        try {
+            $day->run($part);
+        } catch (Throwable $e) {
+            Output::error('Fatal error:');
+            Output::errorFatal($e->getMessage());
+        }
         die;
     }
 }
