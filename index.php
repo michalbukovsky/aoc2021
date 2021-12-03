@@ -1,9 +1,9 @@
-<?php
+<?php declare(strict_types = 1);
 
 error_reporting(E_ALL);
 
 use App\IRunner;
-use App\Utils\Output;
+use App\Utils\Outputter;
 use Tracy\Debugger;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -18,18 +18,18 @@ $loader->setTempDirectory(__DIR__ . '/temp');
 $loader->register();
 
 $day = ($argv[1] ?? null);
-$part = (int) ($argv[2] ?? 1);
+$part = (int)($argv[2] ?? 1);
 
 if ($day === null) {
-    Output::errorFatal('No day specified');
+    Outputter::errorFatal('No day specified');
 }
 if (!preg_match('~^\d{1,2}$~', $day)) {
-    Output::errorFatal("Value '$day' is invalid for a day number.");
+    Outputter::errorFatal("Value '$day' is invalid for a day number.");
 }
 
 $folderName = __DIR__ . '/app/days/' . str_pad($day, 2, '0', STR_PAD_LEFT);
 if (!file_exists($folderName)) {
-    Output::errorFatal("Day '$day' not yet implemented");
+    Outputter::errorFatal("Day '$day' not yet implemented");
 }
 
 $filesInFolder = scandir($folderName);
@@ -40,17 +40,17 @@ foreach ($filesInFolder as $filename) {
         /** @var IRunner $day */
         $day = new $className();
 
-        Output::notice('Result:');
-        Output::newline();
+        Outputter::notice('Result:');
+        Outputter::newline();
 
         try {
             $day->run($part);
         } catch (Throwable $e) {
-            Output::error('Fatal error:');
-            Output::errorFatal($e->getMessage());
+            Outputter::error('Fatal error:');
+            Outputter::errorFatal($e->getMessage());
         }
         die;
     }
 }
 
-Output::errorFatal("No Runner class found for day '$day'");
+Outputter::errorFatal("No Runner class found for day '$day'");

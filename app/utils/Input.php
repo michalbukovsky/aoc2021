@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace App\Utils;
 
@@ -36,7 +36,7 @@ class Input
     public function getAsArrayOfIntegers(bool $filterLines = true): array
     {
         return array_map(
-            static fn(string $line): int => (int) $line,
+            static fn(string $line): int => (int)$line,
             $this->getAsArray($filterLines)
         );
     }
@@ -70,5 +70,11 @@ class Input
             static fn(string $line): array => str_split($line, 1),
             $this->getAsArray($filterLines)
         );
+    }
+
+
+    public function getFirstLine(): string
+    {
+        return substr($this->data, 0, strpos($this->data, "\n"));
     }
 }
