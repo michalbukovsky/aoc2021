@@ -35,10 +35,7 @@ class Input
      */
     public function getAsArrayOfIntegers(bool $filterLines = true): array
     {
-        return array_map(
-            static fn(string $line): int => (int)$line,
-            $this->getAsArray($filterLines)
-        );
+        return Tools::intifyArray($this->getAsArray($filterLines));
     }
 
 

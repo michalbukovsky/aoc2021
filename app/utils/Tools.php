@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace App\Utils;
 
@@ -20,5 +20,30 @@ abstract class Tools
             $positions[] = $position;
             $offset = $position + 1;
         }
+    }
+
+
+    /**
+     * @param int[] $array
+     *
+     * @return array
+     */
+    public static function intifyArray(array $array): array
+    {
+        return array_map(
+            static fn(string $line): int => (int)$line,
+            $array
+        );
+    }
+
+
+    public static function arraySumRecursive(array $array): int
+    {
+        $sum = 0;
+        foreach ($array as $subArray) {
+            $sum += array_sum($subArray);
+        }
+
+        return $sum;
     }
 }

@@ -37,6 +37,11 @@ $filesInFolder = scandir($folderName);
 foreach ($filesInFolder as $filename) {
     if (substr($filename, -3) === 'php') {
         $className = '\\App\\' . substr($filename, 0, -4);
+
+        if (!is_a($className, IRunner::class, true)) {
+            continue;
+        }
+
         /** @var IRunner $day */
         $day = new $className();
 
@@ -46,7 +51,7 @@ foreach ($filesInFolder as $filename) {
         try {
             $day->run($part);
         } catch (Throwable $e) {
-            Outputter::error('Fatal error:');
+            Outputter::error('Fatal error (' . get_class($e) . '):');
             Outputter::errorFatal($e->getMessage());
         }
         die;
