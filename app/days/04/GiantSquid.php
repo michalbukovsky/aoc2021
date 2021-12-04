@@ -10,6 +10,18 @@ class GiantSquid extends TwoPartRunner
 {
     protected function runPart1(Input $data): string
     {
+        return $this->play($data, true);
+    }
+
+
+    protected function runPart2(Input $data): string
+    {
+        return $this->play($data, false);
+    }
+
+
+    private function play(Input $data, bool $returnAfterFirstWin): string
+    {
         $input = $data->getAsString();
 
         $draws = explode(',', substr($input, 0, strpos($input, "\n")));
@@ -22,14 +34,18 @@ class GiantSquid extends TwoPartRunner
             $boards[] = Board::createFromString($boardString);
         }
 
-        try {
-            foreach ($draws as $draw) {
-                foreach ($boards as $board) {
+        foreach ($draws as $draw) {
+            foreach ($boards as $board) {
+                try {
                     $board->drawNumber($draw);
+                } catch (BingoException $e) {
+                    if ($returnAfterFirstWin === true
+                        || ($returnAfterFirstWin === false && $this->areAllBoardsWon($boards))
+                    ) {
+                        return (string)($e->getSumUndrawn() * $draw);
+                    }
                 }
             }
-        } catch (BingoException $e) {
-            return (string)($e->getSumUndrawn() * $draw);
         }
 
         Outputter::errorFatal('No bingo found.');
@@ -37,9 +53,9 @@ class GiantSquid extends TwoPartRunner
     }
 
 
-    protected function runPart2(Input $data): string
+    private function areAllBoardsWon(array $boards): bool
     {
-        return '';
+        return array_filter($boards, static fn(Board $board) => !$board->isWon()) === [];
     }
 
 
@@ -51,6 +67,6 @@ class GiantSquid extends TwoPartRunner
 
     protected function getExpectedTestResult2(): ?string
     {
-        return '';
+        return '1924';
     }
 }

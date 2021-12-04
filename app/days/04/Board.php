@@ -13,6 +13,8 @@ class Board
      */
     private array $lines;
 
+    private bool $isWon = false;
+
 
     public static function createFromString(string $inputString): self
     {
@@ -58,10 +60,14 @@ class Board
      */
     private function checkBingo(): void
     {
+        if ($this->isWon) {
+            return;
+        }
+
         $columnCounts = array_fill(0, self::COUNT, 0);
         foreach ($this->lines as $line) {
             if ($line === []) {
-                throw new BingoException(Tools::arraySumRecursive($this->lines));
+                $this->handleVictory();
             }
 
             for ($i = 0; $i < self::COUNT; $i++) {
@@ -71,7 +77,23 @@ class Board
             }
         }
         if (in_array(0, $columnCounts, true)) {
-            throw new BingoException(Tools::arraySumRecursive($this->lines));
+            $this->handleVictory();
         }
+    }
+
+
+    /**
+     * @throws BingoException
+     */
+    private function handleVictory(): void
+    {
+        $this->isWon = true;
+        throw new BingoException(Tools::arraySumRecursive($this->lines));
+    }
+
+
+    public function isWon(): bool
+    {
+        return $this->isWon;
     }
 }
