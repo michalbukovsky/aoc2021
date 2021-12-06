@@ -47,10 +47,8 @@ class HydrothermalVenture extends TwoPartRunner
         $map[$currentY][$currentX]++;
 
         do {
-            $incrementX = ($x2 - $x1);
-            $currentX += (int)($incrementX > 0 ? ceil($incrementX / 10000) : floor($incrementX / 10000));
-            $incrementY = ($y2 - $y1);
-            $currentY += (int)($incrementY > 0 ? ceil($incrementY / 10000) : floor($incrementY / 10000));
+            $currentX += ($x2 - $x1) <=> 0;
+            $currentY += ($y2 - $y1) <=> 0;
 
             $map[$currentY][$currentX]++;
         } while ($currentX !== $x2 || $currentY !== $y2);
