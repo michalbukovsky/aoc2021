@@ -72,6 +72,10 @@ class Input
 
     public function getFirstLine(): string
     {
+        if (strpos($this->data, "\n") === false) {
+            return $this->data;
+        }
+
         return substr($this->data, 0, strpos($this->data, "\n"));
     }
 }
