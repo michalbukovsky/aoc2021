@@ -23,7 +23,7 @@ class Lanternfish extends TwoPartRunner
     {
         $day = 1;
         $fishesByDay = [];
-        foreach (Tools::intifyArray(explode(',', $data->getFirstLine())) as $fishInt) {
+        foreach ($data->getFirstLineAsIntegers() as $fishInt) {
             $fishesByDay[$fishInt]++;
         }
 

@@ -78,4 +78,13 @@ class Input
 
         return substr($this->data, 0, strpos($this->data, "\n"));
     }
+
+
+    /**
+     * @return int[]
+     */
+    public function getFirstLineAsIntegers(string $separator = ','): array
+    {
+        return Tools::intifyArray(explode($separator, $this->getFirstLine()));
+    }
 }
