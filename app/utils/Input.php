@@ -39,6 +39,17 @@ class Input
     }
 
 
+    public function getAsArrayOfArrayOfIntegers(bool $filterLines = true, int $sliceLength = 1): array
+    {
+        $returnArray = [];
+        foreach ($this->getAsArray($filterLines) as $line) {
+            $returnArray[] = Tools::intifyArray(str_split($line, $sliceLength));
+        }
+
+        return $returnArray;
+    }
+
+
     /**
      * @return array<int, array<int, string>>
      */
