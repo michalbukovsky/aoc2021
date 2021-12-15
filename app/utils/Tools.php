@@ -46,4 +46,15 @@ abstract class Tools
 
         return $sum;
     }
+
+
+    public static function arrayMax(array $array): int
+    {
+        $max = 0;
+        foreach ($array as $line) {
+            $max = max($max, ...array_keys($line));
+        }
+
+        return $max;
+    }
 }

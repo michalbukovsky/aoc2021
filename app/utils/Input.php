@@ -2,6 +2,8 @@
 
 namespace App\Utils;
 
+use InvalidArgumentException;
+
 class Input
 {
     private string $data;
@@ -59,7 +61,7 @@ class Input
         string $spaceSeparator = ' '
     ): array {
         if ($spaceSeparator === '') {
-            throw new \InvalidArgumentException('Space separator cannot be empty string!');
+            throw new InvalidArgumentException('Space separator cannot be empty string!');
         }
 
         return array_map(
