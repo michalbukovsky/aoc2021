@@ -2,6 +2,8 @@
 
 namespace App;
 
+use VisitedTwiceException;
+
 class Node
 {
     public const START = 'start';
@@ -23,10 +25,8 @@ class Node
 
     private int $visits;
 
-    private int $maxVisitsPerSmall;
 
-
-    public function __construct(string $name, int $maxVisitsPerSmall = 1)
+    public function __construct(string $name)
     {
         $this->name = $name;
         $this->isStart = $name === self::START;
@@ -34,7 +34,6 @@ class Node
         $this->isSmall = (bool)preg_match('~[a-z]+~', $name);
         $this->availableNodes = $this->nodes;
         $this->visits = 0;
-        $this->maxVisitsPerSmall = $maxVisitsPerSmall;
     }
 
 
@@ -58,9 +57,12 @@ class Node
     }
 
 
-    public function getNextNodeRandom(): Node
+    public function getNextNodeRandom(int $maxVisitsPerSmall): Node
     {
-        $this->availableNodes = array_filter($this->availableNodes, static fn(Node $node) => $node->isEnterable());
+        $this->availableNodes = array_filter(
+            $this->availableNodes,
+            static fn(Node $node) => $node->isEnterable($maxVisitsPerSmall)
+        );
         if ($this->availableNodes === []) {
             throw new NowhereToGoException();
         }
@@ -88,14 +90,20 @@ class Node
     }
 
 
-    public function isEnterable(): bool
+    public function isEnterable(int $maxVisitsPerSmall): bool
     {
-        return !$this->isSmall || $this->visits < $this->maxVisitsPerSmall;
+        return !$this->isSmall || $this->visits < $maxVisitsPerSmall;
     }
 
 
+    /**
+     * @throws VisitedTwiceException
+     */
     public function markVisited(): void
     {
         $this->visits++;
+        if ($this->isSmall && $this->visits >= 2) {
+            throw new VisitedTwiceException();
+        }
     }
 }

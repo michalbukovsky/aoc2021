@@ -83,13 +83,18 @@ class Input
     }
 
 
-    public function getFirstLine(): string
+    public function getFirstLine(bool $remove = false): string
     {
         if (strpos($this->data, "\n") === false) {
             return $this->data;
         }
 
-        return substr($this->data, 0, strpos($this->data, "\n"));
+        $firstLine = substr($this->data, 0, strpos($this->data, "\n"));
+        if ($remove === true) {
+            $this->data = substr($this->data, strpos($this->data, "\n"));
+        }
+
+        return $firstLine;
     }
 
 

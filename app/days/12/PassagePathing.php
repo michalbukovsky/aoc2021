@@ -3,12 +3,11 @@
 namespace App;
 
 use App\Utils\Input;
-use App\Utils\Outputter;
+use VisitedTwiceException;
 
 class PassagePathing extends TwoPartRunner
 {
-    private const TRIES = 100000;
-
+    private const TRIES = 1500000;
 
     protected function runPart1(Input $data): string
     {
@@ -30,11 +29,11 @@ class PassagePathing extends TwoPartRunner
 
         foreach ($data->getAsArrayOfArrays(true, "\n", '-') as $line) {
             $nodeName = $line[0];
-            $node1 = $nodes[$nodeName] ?? new Node($nodeName, $maxVisitsPerSmallCave);
+            $node1 = $nodes[$nodeName] ?? new Node($nodeName);
             $nodes[$nodeName] = $node1;
 
             $nodeName = $line[1];
-            $node2 = $nodes[$nodeName] ?? new Node($nodeName, $maxVisitsPerSmallCave);
+            $node2 = $nodes[$nodeName] ?? new Node($nodeName);
             $nodes[$nodeName] = $node2;
 
             $node1->addNode($node2);
@@ -44,12 +43,13 @@ class PassagePathing extends TwoPartRunner
         $paths = [];
         while (true) {
             $this->resetNodes($nodes);
+            $currentMaxVisitsPerSmallCave = $maxVisitsPerSmallCave;
             $node = $nodes[Node::START];
             $path = $node->getName();
 
             while (true) {
                 try {
-                    $node = $node->getNextNodeRandom();
+                    $node = $node->getNextNodeRandom($currentMaxVisitsPerSmallCave);
                 } catch (NowhereToGoException $e) {
                     break;
                 }
@@ -66,11 +66,14 @@ class PassagePathing extends TwoPartRunner
                     }
 
                     $paths[$path] = true;
-                    Outputter::notice($path);
                     break;
                 }
 
-                $node->markVisited();
+                try {
+                    $node->markVisited();
+                } catch (VisitedTwiceException $e) {
+                    $currentMaxVisitsPerSmallCave = 1;
+                }
             }
         }
 
